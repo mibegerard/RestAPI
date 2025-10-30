@@ -10,7 +10,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "code:check": "npm run lint && npm run format:check",
-    "code:fix": "npm run lint:fix && npm run format"
+    "code:fix": "npm run lint:fix && npm run format",
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "",
@@ -31,7 +35,10 @@
   },
   "devDependencies": {
     "eslint": "^9.38.0",
+    "jest": "^30.2.0",
+    "mongodb-memory-server": "^10.2.3",
     "nodemon": "^3.1.10",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4"
   }
 }
