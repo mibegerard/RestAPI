@@ -42,6 +42,6 @@ const skipHealthChecks = morgan(morganFormat, {
 });
 
 module.exports = {
-  requestLogger,        // Logs all requests
-  skipHealthChecks      // Logs all except health checks
+  requestLogger,        
+  skipHealthChecks      
 };

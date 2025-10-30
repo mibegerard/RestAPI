@@ -108,6 +108,57 @@ class PlayerService {
     return updated.toObject();
   }
 
+/**
+ * Partial update (PATCH) - Update any fields of a player without replacing the entire object.
+ * Respects HTTP PATCH semantics: only modifies provided fields, leaves others unchanged.
+ */
+  async updatePlayerPartial(id, partialData) {
+  if ('id' in partialData) throw new ValidationError("Player ID cannot be modified");
+
+  const allowedTop = ['firstname', 'lastname', 'shortname', 'sex', 'picture'];
+  const updateData = {};
+
+  // --- Top-level fields ---
+  for (const field of allowedTop) {
+    if (field in partialData) updateData[field] = partialData[field];
+  }
+
+  // --- Nested objects ---
+  const nestedKeys = ['country', 'data'];
+  let currentPlayer;
+
+  for (const key of nestedKeys) {
+    if (key in partialData && typeof partialData[key] === 'object') {
+      currentPlayer = currentPlayer || await Player.findOne({ id }).lean();
+      if (!currentPlayer) throw new NotFoundError(`Player with id ${id} not found`);
+      updateData[key] = { ...currentPlayer[key], ...partialData[key] };
+    }
+  }
+
+  if (Object.keys(updateData).length === 0)
+    throw new ValidationError("No valid fields provided for update");
+
+  // --- shortname uniqueness ---
+  if ('shortname' in updateData) {
+    const existing = await Player.findOne({ 
+      shortname: updateData.shortname.toUpperCase(), 
+      id: { $ne: id } 
+    });
+    if (existing) throw new ConflictError("Another player with this shortname exists");
+    updateData.shortname = updateData.shortname.toUpperCase();
+  }
+
+  // --- Perform update ---
+  const updated = await Player.findOneAndUpdate({ id }, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updated) throw new NotFoundError(`Player with id ${id} not found`);
+  return updated.toObject();
+}
+
+
   // --- DELETE OPERATIONS ---
 
   /**

@@ -31,17 +31,23 @@ function computeCountryWinRatios(players) {
     countryStats[code].total += total;
   });
 
-  const ratios = Object.entries(countryStats).map(([code, { wins, total }]) => ({
-    code,
-    winRatio: total > 0 ? parseFloat((wins / total).toFixed(2)) : 0,
-  }));
+  const ratios = Object.entries(countryStats)
+    .map(([code, { wins, total }]) => ({
+      code,
+      winRatio: total > 0 ? parseFloat((wins / total).toFixed(2)) : 0,
+    }))
+    .sort((a, b) => b.winRatio - a.winRatio);
 
-  ratios.sort((a, b) => b.winRatio - a.winRatio);
+  if (!ratios.length) return { best: null, worst: null };
 
-  return {
-    best: ratios[0] || null,
-    worst: ratios[ratios.length - 1] || null,
-  };
+  // --- Handle equalities ---
+  const maxRatio = ratios[0].winRatio;
+  const minRatio = ratios[ratios.length - 1].winRatio;
+
+  const best = ratios.filter((c) => c.winRatio === maxRatio);
+  const worst = ratios.filter((c) => c.winRatio === minRatio);
+
+  return { best, worst };
 }
 
 module.exports = {

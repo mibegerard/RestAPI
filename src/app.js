@@ -4,6 +4,8 @@ const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const catchError = require("./helper/catchError");
 const corsMiddleware = require("./config/cors");
+const errorHandler = require('./middlewares/errorHandler');
+const { requestLogger } = require('./middlewares/logger');
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 // ------------------------------------ app initialization -----------------------------------
@@ -13,6 +15,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.set("trust proxy", true);
+
+// Request logging
+app.use(requestLogger);
 
 // CORS configuration
 app.use(corsMiddleware);
@@ -29,9 +34,7 @@ fs.readdirSync(routesDirPath).forEach((file) => {
 });
 
 // ------------------------------------ error handling ---------------------------------------
-app.use((err, req, res, next) => {
-    catchError(err, req, res, next);
-});
+app.use(errorHandler);
 
 // ------------------------------------ export ----------------------------------------------
 module.exports = app;
