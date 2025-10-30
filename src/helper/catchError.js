@@ -1,33 +1,11 @@
 /**
- * Global error handler middleware
+ * Wrap async controller functions to automatically catch errors
+ * and forward them to Express's error handler.
+ *
+ * Keeps controllers clean (no try/catch everywhere).
  */
-const catchError = (err, req, res, next) => {
-    console.error('Error:', err);
-
-    // Default error
-    let error = {
-        statusCode: 500,
-        message: 'Internal Server Error',
-        success: false
-    };
-
-    // Mongoose validation error
-    if (err.name === 'ValidationError') {
-        error.statusCode = 400;
-        error.message = Object.values(err.errors).map(e => e.message).join(', ');
-    }
-
-    // Mongoose duplicate key error
-    if (err.code === 11000) {
-        error.statusCode = 400;
-        error.message = 'Duplicate field value entered';
-    }
-
-    // Mongoose cast error
-    if (err.name === 'CastError') {
-        error.statusCode = 400;
-        error.message = 'Resource not found';
-    }
+const catchError = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
 };
 
 module.exports = catchError;
