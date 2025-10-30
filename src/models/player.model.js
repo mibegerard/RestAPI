@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 // --- Country Subdocument ---
@@ -53,7 +53,7 @@ const DataSchema = new Schema(
       type: [Number],
       validate: {
         validator: (arr) => Array.isArray(arr) && arr.length === 5,
-        message: "Last must be an array of 5 numeric values (0 or 1)",
+        message: 'Last must be an array of 5 numeric values (0 or 1)',
       },
       required: true,
     },
@@ -90,7 +90,7 @@ const PlayerSchema = new Schema(
     sex: {
       type: String,
       required: true,
-      enum: ["M", "F"],
+      enum: ['M', 'F'],
     },
     country: {
       type: CountrySchema,
@@ -112,6 +112,6 @@ const PlayerSchema = new Schema(
   }
 );
 
-const Player = mongoose.model("Player", PlayerSchema, "Players");
+const Player = mongoose.model('Player', PlayerSchema, 'Players');
 
 module.exports = Player;

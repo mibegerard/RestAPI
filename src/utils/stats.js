@@ -1,4 +1,4 @@
-const { average } = require("./compute");
+const { average } = require('./compute');
 
 /**
  * Count wins in last 5 matches for a player (array of 0/1)

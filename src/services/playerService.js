@@ -1,7 +1,7 @@
-const Player = require("../models/player.model");
-const { NotFoundError, ConflictError, ValidationError } = require("../utils/appError");
-const { calculateBMI, average, median } = require("../utils/compute");
-const { computeCountryWinRatios } = require("../utils/stats");
+const Player = require('../models/player.model');
+const { NotFoundError, ConflictError, ValidationError } = require('../utils/appError');
+const { calculateBMI, average, median } = require('../utils/compute');
+const { computeCountryWinRatios } = require('../utils/stats');
 
 class PlayerService {
   // --- READ OPERATIONS ---
@@ -9,7 +9,7 @@ class PlayerService {
   /**
    * Fetch all players with optional pagination, sorting, and filtering.
    */
-  async getAllPlayers({ page = 1, limit = 10, sort = "data.rank", filter = {} } = {}) {
+  async getAllPlayers({ page = 1, limit = 10, sort = 'data.rank', filter = {} } = {}) {
     const skip = (page - 1) * limit;
 
     const players = await Player.find(filter)
@@ -47,7 +47,7 @@ class PlayerService {
     const existing = await Player.findOne({
       $or: [{ id: playerData.id }, { shortname: playerData.shortname }],
     });
-    if (existing) throw new ConflictError("Player with same ID or shortname already exists");
+    if (existing) throw new ConflictError('Player with same ID or shortname already exists');
 
     const player = await Player.create(playerData);
     return player.toObject();
@@ -72,12 +72,12 @@ class PlayerService {
    * Update only the player's rank field (must stay positive).
    */
   async updatePlayerRank(id, newRank) {
-    if (typeof newRank !== "number" || newRank <= 0)
-      throw new ValidationError("Rank must be a positive number");
+    if (typeof newRank !== 'number' || newRank <= 0)
+      throw new ValidationError('Rank must be a positive number');
 
     const updated = await Player.findOneAndUpdate(
       { id },
-      { "data.rank": newRank },
+      { 'data.rank': newRank },
       { new: true, runValidators: true }
     );
 
@@ -89,7 +89,7 @@ class PlayerService {
    * Update specific player stats (partial update on 'data' object).
    */
   async updatePlayerStats(id, statsUpdate) {
-    const allowedFields = ["points", "weight", "height", "age", "last"];
+    const allowedFields = ['points', 'weight', 'height', 'age', 'last'];
     const updateData = {};
 
     for (const key of allowedFields) {
@@ -97,7 +97,7 @@ class PlayerService {
     }
 
     if (Object.keys(updateData).length === 0)
-      throw new ValidationError("No valid stats fields provided");
+      throw new ValidationError('No valid stats fields provided');
 
     const updated = await Player.findOneAndUpdate({ id }, updateData, {
       new: true,
@@ -113,7 +113,7 @@ class PlayerService {
  * Respects HTTP PATCH semantics: only modifies provided fields, leaves others unchanged.
  */
   async updatePlayerPartial(id, partialData) {
-  if ('id' in partialData) throw new ValidationError("Player ID cannot be modified");
+  if ('id' in partialData) throw new ValidationError('Player ID cannot be modified');
 
   const allowedTop = ['firstname', 'lastname', 'shortname', 'sex', 'picture'];
   const updateData = {};
@@ -136,7 +136,7 @@ class PlayerService {
   }
 
   if (Object.keys(updateData).length === 0)
-    throw new ValidationError("No valid fields provided for update");
+    throw new ValidationError('No valid fields provided for update');
 
   // --- shortname uniqueness ---
   if ('shortname' in updateData) {
@@ -144,7 +144,7 @@ class PlayerService {
       shortname: updateData.shortname.toUpperCase(), 
       id: { $ne: id } 
     });
-    if (existing) throw new ConflictError("Another player with this shortname exists");
+    if (existing) throw new ConflictError('Another player with this shortname exists');
     updateData.shortname = updateData.shortname.toUpperCase();
   }
 
@@ -177,7 +177,7 @@ class PlayerService {
    */
   async getBestAndWorstCountry() {
     const players = await Player.find().lean();
-    if (!players.length) throw new NotFoundError("No players found for analysis");
+    if (!players.length) throw new NotFoundError('No players found for analysis');
 
     return computeCountryWinRatios(players);
   }
@@ -187,7 +187,7 @@ class PlayerService {
    */
   async getPlayersBMI() {
     const players = await Player.find().lean();
-    if (!players.length) throw new NotFoundError("No players found for BMI analysis");
+    if (!players.length) throw new NotFoundError('No players found for BMI analysis');
 
     const bmiList = players.map((p) => ({
       id: p.id,
@@ -209,10 +209,10 @@ class PlayerService {
    */
   async getHeightStats() {
     const players = await Player.find().lean();
-    if (!players.length) throw new NotFoundError("No players found for height analysis");
+    if (!players.length) throw new NotFoundError('No players found for height analysis');
 
-    const heights = players.map((p) => p.data.height).filter((h) => typeof h === "number");
-    if (!heights.length) throw new ValidationError("No valid height data found");
+    const heights = players.map((p) => p.data.height).filter((h) => typeof h === 'number');
+    if (!heights.length) throw new ValidationError('No valid height data found');
 
     return {
       min: Math.min(...heights),

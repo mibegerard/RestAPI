@@ -1,7 +1,7 @@
 // controllers/playerController.js
-const playerService = require("../services/playerService");
-const { ValidationError } = require("../utils/appError");
-const catchError = require("../helper/catchError");
+const playerService = require('../services/playerService');
+const { ValidationError } = require('../utils/appError');
+const catchError = require('../helper/catchError');
 
 /**
  * Controller layer for players.
@@ -15,14 +15,14 @@ class PlayerController {
     const result = await playerService.getAllPlayers({
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
-      sort: sort || "data.rank",
+      sort: sort || 'data.rank',
     });
     res.status(200).json({ success: true, data: result });
   });
 
   getPlayerById = catchError(async (req, res, next) => {
     const id = parseInt(req.params.id);
-    if (isNaN(id)) throw new ValidationError("Invalid player ID");
+    if (isNaN(id)) throw new ValidationError('Invalid player ID');
 
     const player = await playerService.getPlayerById(id);
     res.status(200).json({ success: true, data: player });
@@ -38,7 +38,7 @@ class PlayerController {
   // --- UPDATE ---
   updatePlayer = catchError(async (req, res, next) => {
     const id = parseInt(req.params.id);
-    if (isNaN(id)) throw new ValidationError("Invalid player ID");
+    if (isNaN(id)) throw new ValidationError('Invalid player ID');
 
     const updatedPlayer = await playerService.updatePlayer(id, req.body);
     res.status(200).json({ success: true, data: updatedPlayer });
@@ -47,7 +47,7 @@ class PlayerController {
   updatePlayerRank = catchError(async (req, res, next) => {
     const id = parseInt(req.params.id);
     const { rank } = req.body;
-    if (isNaN(id)) throw new ValidationError("Invalid player ID");
+    if (isNaN(id)) throw new ValidationError('Invalid player ID');
 
     const updated = await playerService.updatePlayerRank(id, rank);
     res.status(200).json({ success: true, data: updated });
@@ -56,7 +56,7 @@ class PlayerController {
   updatePlayerStats = catchError(async (req, res, next) => {
     const id = parseInt(req.params.id);
     const statsUpdate = req.body;
-    if (isNaN(id)) throw new ValidationError("Invalid player ID");
+    if (isNaN(id)) throw new ValidationError('Invalid player ID');
 
     const updated = await playerService.updatePlayerStats(id, statsUpdate);
     res.status(200).json({ success: true, data: updated });
@@ -67,7 +67,7 @@ class PlayerController {
    */
   updatePlayerPartial = catchError(async (req, res, next) => {
     const id = parseInt(req.params.id);
-    if (isNaN(id)) throw new ValidationError("Invalid player ID");
+    if (isNaN(id)) throw new ValidationError('Invalid player ID');
 
     const partialData = req.body;
     const updated = await playerService.updatePlayerPartial(id, partialData);
@@ -77,7 +77,7 @@ class PlayerController {
   // --- DELETE ---
   deletePlayer = catchError(async (req, res, next) => {
     const id = parseInt(req.params.id);
-    if (isNaN(id)) throw new ValidationError("Invalid player ID");
+    if (isNaN(id)) throw new ValidationError('Invalid player ID');
 
     const result = await playerService.deletePlayer(id);
     res.status(200).json({ success: true, data: result });

@@ -1,5 +1,5 @@
-const { AppError, ValidationError, NotFoundError, ConflictError } = require("../utils/appError");
-const logger = require("../helper/logger");
+const { AppError, ValidationError, NotFoundError, ConflictError } = require('../utils/appError');
+const logger = require('../helper/logger');
 
 /**
  * Global error handling middleware
@@ -8,16 +8,16 @@ const logger = require("../helper/logger");
 function errorHandler(err, req, res, next) {
   // Default fallback
   let statusCode = err.statusCode || 500;
-  let message = err.message || "Internal Server Error";
+  let message = err.message || 'Internal Server Error';
 
   // Handle unexpected non-AppError exceptions 
   if (!(err instanceof AppError)) {
     statusCode = 500;
-    message = "Something went wrong on the server.";
+    message = 'Something went wrong on the server.';
   }
 
   // Log errors with appropriate level based on type
-  if (process.env.NODE_ENV !== "test") {
+  if (process.env.NODE_ENV !== 'test') {
     if (err instanceof ValidationError) {
       logger.warn(`[${req.method}] ${req.originalUrl} - Validation: ${message}`);
     } else if (err instanceof NotFoundError) {
