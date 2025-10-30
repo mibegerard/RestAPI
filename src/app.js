@@ -6,6 +6,7 @@ const catchError = require("./helper/catchError");
 const corsMiddleware = require("./config/cors");
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger } = require('./middlewares/logger');
+const swaggerDocs = require('./helper/swagger');
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 // ------------------------------------ app initialization -----------------------------------
@@ -32,6 +33,10 @@ fs.readdirSync(routesDirPath).forEach((file) => {
         app.use("/api", require(filePath));
     }
 });
+
+// ------------------------------------ swagger documentation ----------------------------
+const PORT = process.env.PORT || 3000;
+swaggerDocs(app, PORT);
 
 // ------------------------------------ error handling ---------------------------------------
 app.use(errorHandler);
