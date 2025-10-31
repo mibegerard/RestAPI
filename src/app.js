@@ -2,11 +2,11 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const cookieParser = require('cookie-parser');
-const catchError = require('./helper/catchError');
 const corsMiddleware = require('./config/cors');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger } = require('./middlewares/logger');
 const swaggerDocs = require('./helper/swagger');
+const documentationController = require('./controllers/documentationController');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 // ------------------------------------ app initialization -----------------------------------
@@ -22,6 +22,9 @@ app.use(requestLogger);
 
 // CORS configuration
 app.use(corsMiddleware);
+
+// ------------------------------------ root documentation route -------------------------
+app.get('/', documentationController);
 
 // ------------------------------------ dynamic routes ---------------------------------------
 const routesDirPath = path.join(__dirname, 'routes');
