@@ -59,10 +59,10 @@ jobs:
           docker build -t restapi:${{ github.sha }} .
           docker run -d --name test-api -p 3001:3000 -e NODE_ENV=production restapi:${{ github.sha }}
           sleep 15
-          
+
           # Test API endpoints
           curl -f http://localhost:3001/api/players || exit 1
           echo "✅ Docker API test successful"
-          
+
           docker stop test-api
           docker rm test-api
