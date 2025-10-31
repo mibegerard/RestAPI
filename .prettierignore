@@ -1,0 +1,31 @@
+# Dépendances
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build et distribution  
+dist/
+build/
+.next/
+
+# Logs
+logs/
+*.log
+
+# Données et cache
+.env
+.env.local
+.env.production
+.cache/
+
+# Fichiers générés
+coverage/
+.nyc_output/
+
+# Swagger et documentation générée
+swagger.json
+api-docs/
+
+# Fichiers système
+.DS_Store
+Thumbs.db

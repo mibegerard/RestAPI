@@ -1,0 +1,29 @@
+services:
+  # API REST
+  api:
+    build: .
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    env_file:
+      - .env
+    environment:
+    - DB_URI=mongodb://mongo:27017/tennis
+    depends_on:
+      - mongo
+    volumes:
+      - ./src:/app/src 
+    restart: unless-stopped
+
+  # MongoDB Database
+  mongo:
+    image: mongo:7-jammy
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=tennis
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
