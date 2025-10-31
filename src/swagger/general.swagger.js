@@ -4,7 +4,7 @@
  *   - name: General
  *     description: Endpoints généraux de l'API
  * 
- * /api:
+ * /:
  *   get:
  *     summary: Informations de l'API
  *     description: Récupère les informations générales sur l'API et ses endpoints
@@ -36,7 +36,7 @@
  *                       type: string
  *                       example: "/api/health"
  * 
- * /api/health:
+ * /health:
  *   get:
  *     summary: Vérification de santé de l'API
  *     description: Endpoint pour vérifier si l'API fonctionne correctement
