@@ -11,7 +11,7 @@ beforeAll(async () => {
   // Démarrer MongoDB Memory Server
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-  
+
   // Se connecter à la base de test
   await mongoose.connect(uri);
 });

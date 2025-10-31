@@ -19,7 +19,7 @@ describe('PlayerService', () => {
         total: 5,
         page: 1,
         limit: 10,
-        totalPages: 1
+        totalPages: 1,
       });
       expect(result.players).toHaveLength(5);
     });
@@ -37,7 +37,7 @@ describe('PlayerService', () => {
         total: 15,
         page: 2,
         limit: 5,
-        totalPages: 3
+        totalPages: 3,
       });
       expect(result.players).toHaveLength(5);
     });
@@ -51,7 +51,7 @@ describe('PlayerService', () => {
         total: 0,
         page: 1,
         limit: 10,
-        totalPages: 0
+        totalPages: 0,
       });
       expect(result.players).toHaveLength(0);
     });
@@ -70,15 +70,13 @@ describe('PlayerService', () => {
       expect(result).toMatchObject({
         id: 1,
         firstname: playerData.firstname,
-        lastname: playerData.lastname
+        lastname: playerData.lastname,
       });
     });
 
     test('should throw NotFoundError when player does not exist', async () => {
       // Act & Assert
-      await expect(playerService.getPlayerById(999))
-        .rejects
-        .toThrow(NotFoundError);
+      await expect(playerService.getPlayerById(999)).rejects.toThrow(NotFoundError);
     });
   });
 
@@ -95,7 +93,7 @@ describe('PlayerService', () => {
         id: 1,
         firstname: playerData.firstname,
         lastname: playerData.lastname,
-        country: playerData.country
+        country: playerData.country,
       });
 
       // Verify in database
@@ -107,26 +105,22 @@ describe('PlayerService', () => {
       // Arrange
       const playerData1 = createPlayerData({ id: 1, shortname: 'TEST1' });
       const playerData2 = createPlayerData({ id: 1, shortname: 'TEST2' });
-      
+
       await Player.create(playerData1);
 
       // Act & Assert
-      await expect(playerService.createPlayer(playerData2))
-        .rejects
-        .toThrow(ConflictError);
+      await expect(playerService.createPlayer(playerData2)).rejects.toThrow(ConflictError);
     });
 
     test('should throw ConflictError for duplicate shortname', async () => {
       // Arrange
       const playerData1 = createPlayerData({ id: 1, shortname: 'TEST' });
       const playerData2 = createPlayerData({ id: 2, shortname: 'TEST' });
-      
+
       await Player.create(playerData1);
 
       // Act & Assert
-      await expect(playerService.createPlayer(playerData2))
-        .rejects
-        .toThrow(ConflictError);
+      await expect(playerService.createPlayer(playerData2)).rejects.toThrow(ConflictError);
     });
   });
 
@@ -136,14 +130,14 @@ describe('PlayerService', () => {
       const originalData = createPlayerData({ id: 1 });
       await Player.create(originalData);
 
-      const updateData = createPlayerData({ 
-        id: 1, 
+      const updateData = createPlayerData({
+        id: 1,
         firstname: 'Updated',
         lastname: 'Name',
         country: {
           code: 'ESP',
-          picture: 'https://example.com/flag.jpg'
-        }
+          picture: 'https://example.com/flag.jpg',
+        },
       });
 
       // Act
@@ -160,28 +154,26 @@ describe('PlayerService', () => {
       const updateData = createPlayerData({ id: 999 });
 
       // Act & Assert
-      await expect(playerService.updatePlayer(999, updateData))
-        .rejects
-        .toThrow(NotFoundError);
+      await expect(playerService.updatePlayer(999, updateData)).rejects.toThrow(NotFoundError);
     });
   });
 
   describe('updatePlayerPartial', () => {
     test('should update only provided fields', async () => {
       // Arrange
-      const originalData = createPlayerData({ 
-        id: 1, 
+      const originalData = createPlayerData({
+        id: 1,
         firstname: 'Original',
         data: {
           ...createPlayerData().data,
-          weight: 75000
-        }
+          weight: 75000,
+        },
       });
       await Player.create(originalData);
 
       // Act
-      const result = await playerService.updatePlayerPartial(1, { 
-        firstname: 'Updated' 
+      const result = await playerService.updatePlayerPartial(1, {
+        firstname: 'Updated',
       });
 
       // Assert
@@ -195,9 +187,9 @@ describe('PlayerService', () => {
       await Player.create(playerData);
 
       // Act & Assert
-      await expect(playerService.updatePlayerPartial(1, { id: 999 }))
-        .rejects
-        .toThrow(ValidationError);
+      await expect(playerService.updatePlayerPartial(1, { id: 999 })).rejects.toThrow(
+        ValidationError,
+      );
     });
 
     test('should throw ValidationError with no valid fields', async () => {
@@ -206,9 +198,7 @@ describe('PlayerService', () => {
       await Player.create(playerData);
 
       // Act & Assert
-      await expect(playerService.updatePlayerPartial(1, {}))
-        .rejects
-        .toThrow(ValidationError);
+      await expect(playerService.updatePlayerPartial(1, {})).rejects.toThrow(ValidationError);
     });
   });
 
@@ -223,7 +213,7 @@ describe('PlayerService', () => {
 
       // Assert
       expect(result.message).toContain('deleted successfully');
-      
+
       // Verify deletion
       const deleted = await Player.findOne({ id: 1 });
       expect(deleted).toBeNull();
@@ -231,9 +221,7 @@ describe('PlayerService', () => {
 
     test('should throw NotFoundError when deleting non-existent player', async () => {
       // Act & Assert
-      await expect(playerService.deletePlayer(999))
-        .rejects
-        .toThrow(NotFoundError);
+      await expect(playerService.deletePlayer(999)).rejects.toThrow(NotFoundError);
     });
   });
 
@@ -249,7 +237,7 @@ describe('PlayerService', () => {
         picture: player.picture,
         country: {
           code: player.country,
-          picture: 'https://example.com/flag.jpg'
+          picture: 'https://example.com/flag.jpg',
         },
         data: {
           rank: index + 1,
@@ -257,10 +245,10 @@ describe('PlayerService', () => {
           weight: player.weight * 1000, // Convert to grams
           height: player.height,
           age: 2025 - player.birthYear,
-          last: [1, 1, 0, 1, 0] // Sample win/loss record
-        }
+          last: [1, 1, 0, 1, 0], // Sample win/loss record
+        },
       }));
-      
+
       await Player.insertMany(testPlayers);
     });
 
@@ -281,9 +269,7 @@ describe('PlayerService', () => {
         await Player.deleteMany({});
 
         // Act & Assert
-        await expect(playerService.getBestAndWorstCountry())
-          .rejects
-          .toThrow(NotFoundError);
+        await expect(playerService.getBestAndWorstCountry()).rejects.toThrow(NotFoundError);
       });
     });
 
@@ -297,9 +283,9 @@ describe('PlayerService', () => {
         expect(result).toHaveProperty('players');
         expect(Array.isArray(result.players)).toBe(true);
         expect(typeof result.average).toBe('number');
-        
+
         // Check BMI calculation
-        result.players.forEach(player => {
+        result.players.forEach((player) => {
           expect(player).toHaveProperty('bmi');
           expect(typeof player.bmi).toBe('number');
         });
@@ -310,9 +296,7 @@ describe('PlayerService', () => {
         await Player.deleteMany({});
 
         // Act & Assert
-        await expect(playerService.getPlayersBMI())
-          .rejects
-          .toThrow(NotFoundError);
+        await expect(playerService.getPlayersBMI()).rejects.toThrow(NotFoundError);
       });
     });
 
@@ -326,12 +310,12 @@ describe('PlayerService', () => {
         expect(result).toHaveProperty('max');
         expect(result).toHaveProperty('average');
         expect(result).toHaveProperty('median');
-        
+
         expect(typeof result.min).toBe('number');
         expect(typeof result.max).toBe('number');
         expect(typeof result.average).toBe('number');
         expect(typeof result.median).toBe('number');
-        
+
         expect(result.min).toBeLessThanOrEqual(result.max);
       });
 
@@ -340,9 +324,7 @@ describe('PlayerService', () => {
         await Player.deleteMany({});
 
         // Act & Assert
-        await expect(playerService.getHeightStats())
-          .rejects
-          .toThrow(NotFoundError);
+        await expect(playerService.getHeightStats()).rejects.toThrow(NotFoundError);
       });
     });
   });

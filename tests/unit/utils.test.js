@@ -239,16 +239,16 @@ describe('Stats Utils', () => {
       const players = [
         {
           country: { code: 'ESP' },
-          data: { last: [1, 1, 1, 0, 0] } // 3/5 = 0.6
+          data: { last: [1, 1, 1, 0, 0] }, // 3/5 = 0.6
         },
         {
           country: { code: 'ESP' },
-          data: { last: [1, 1, 0, 0, 0] } // 2/5 = 0.4
+          data: { last: [1, 1, 0, 0, 0] }, // 2/5 = 0.4
         },
         {
           country: { code: 'FRA' },
-          data: { last: [1, 0, 0, 0, 0] } // 1/5 = 0.2
-        }
+          data: { last: [1, 0, 0, 0, 0] }, // 1/5 = 0.2
+        },
       ];
 
       // Act
@@ -256,10 +256,10 @@ describe('Stats Utils', () => {
 
       // Assert
       expect(result.best).toEqual([
-        { code: 'ESP', winRatio: 0.5 } // (3+2)/(5+5) = 5/10 = 0.5
+        { code: 'ESP', winRatio: 0.5 }, // (3+2)/(5+5) = 5/10 = 0.5
       ]);
       expect(result.worst).toEqual([
-        { code: 'FRA', winRatio: 0.2 } // 1/5 = 0.2
+        { code: 'FRA', winRatio: 0.2 }, // 1/5 = 0.2
       ]);
     });
 
@@ -268,24 +268,20 @@ describe('Stats Utils', () => {
       const players = [
         {
           country: null,
-          data: { last: [1, 1, 1, 1, 1] }
+          data: { last: [1, 1, 1, 1, 1] },
         },
         {
           country: { code: 'ESP' },
-          data: { last: [1, 0, 0, 0, 0] }
-        }
+          data: { last: [1, 0, 0, 0, 0] },
+        },
       ];
 
       // Act
       const result = computeCountryWinRatios(players);
 
       // Assert
-      expect(result.best).toEqual([
-        { code: 'ESP', winRatio: 0.2 }
-      ]);
-      expect(result.worst).toEqual([
-        { code: 'ESP', winRatio: 0.2 }
-      ]);
+      expect(result.best).toEqual([{ code: 'ESP', winRatio: 0.2 }]);
+      expect(result.worst).toEqual([{ code: 'ESP', winRatio: 0.2 }]);
     });
 
     test('should handle empty players array', () => {
@@ -305,12 +301,12 @@ describe('Stats Utils', () => {
       const players = [
         {
           country: { code: 'ESP' },
-          data: { last: [1, 1, 0, 0, 0] } // 2/5 = 0.4
+          data: { last: [1, 1, 0, 0, 0] }, // 2/5 = 0.4
         },
         {
           country: { code: 'FRA' },
-          data: { last: [1, 1, 0, 0, 0] } // 2/5 = 0.4
-        }
+          data: { last: [1, 1, 0, 0, 0] }, // 2/5 = 0.4
+        },
       ];
 
       // Act
@@ -328,12 +324,12 @@ describe('Stats Utils', () => {
       const players = [
         {
           country: { code: 'ESP' },
-          data: { last: [] } // no matches = 0/0 = 0
+          data: { last: [] }, // no matches = 0/0 = 0
         },
         {
           country: { code: 'FRA' },
-          data: null // no data - but will get [] from player.data?.last || []
-        }
+          data: null, // no data - but will get [] from player.data?.last || []
+        },
       ];
 
       // Act
@@ -344,15 +340,15 @@ describe('Stats Utils', () => {
       expect(result.best).toEqual(
         expect.arrayContaining([
           { code: 'ESP', winRatio: 0 },
-          { code: 'FRA', winRatio: 0 }
-        ])
+          { code: 'FRA', winRatio: 0 },
+        ]),
       );
       expect(result.worst).toHaveLength(2);
       expect(result.worst).toEqual(
         expect.arrayContaining([
           { code: 'ESP', winRatio: 0 },
-          { code: 'FRA', winRatio: 0 }
-        ])
+          { code: 'FRA', winRatio: 0 },
+        ]),
       );
     });
   });

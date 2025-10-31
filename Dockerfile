@@ -19,9 +19,8 @@ RUN addgroup -g 1001 -S nodejs \
     && adduser -S restapi -u 1001 -G nodejs
 USER restapi
 
-# Expose port from environment variable
-ENV PORT=${PORT:-3000}
-EXPOSE ${PORT}
+# Expose port
+EXPOSE 3000
 
 # Start application
 CMD ["node", "src/server.js"]

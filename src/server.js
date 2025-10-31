@@ -10,18 +10,18 @@ const PORT = process.env.PORT || 3000;
 
 // ------------------------------------ start server -----------------------------------------
 if (require.main === module) {
-    // Initialize database connection
-    connectDB()
-        .then(() => {
-            logger.info('Database connected successfully');
+  // Initialize database connection
+  connectDB()
+    .then(() => {
+      logger.info('Database connected successfully');
 
-            app.listen(PORT, () => {
-                logger.info(`App is running at http://localhost:${PORT}`);
-                swaggerDocs(app, PORT);
-            });
-        })
-        .catch((err) => {
-            logger.error('Failed to connect to database:', err);
-            process.exit(1);
-        });
+      app.listen(PORT, () => {
+        logger.info(`App is running at http://localhost:${PORT}`);
+        swaggerDocs(app, PORT);
+      });
+    })
+    .catch((err) => {
+      logger.error('Failed to connect to database:', err);
+      process.exit(1);
+    });
 }

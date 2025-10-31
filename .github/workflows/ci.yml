@@ -1,0 +1,54 @@
+name: CI - Node.js Tennis API Robust
+
+on:
+  push:
+    branches: [staging, main]
+  pull_request:
+    branches: [staging, main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      # 1 Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2 Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      # 3 Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4 Lint, format & audit
+      - name: Lint, format & security audit
+        run: |
+          npm run lint
+          npm run format:check
+          npm audit --audit-level=high
+
+      # 5 Run tests with coverage
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+        env:
+          NODE_ENV: test
+
+      # 6 Verify coverage >= 80%
+      - name: Verify test coverage
+        run: |
+          npm test -- --coverage --coverageReporters=text-summary > coverage.txt
+          COVERAGE=$(cat coverage.txt | grep "Statements" | awk '{print $3}' | sed 's/%//')
+          echo "Current test coverage: $COVERAGE%"
+          if [ "$COVERAGE" -lt 80 ]; then
+            echo "❌ Test coverage ($COVERAGE%) is below 80%!"
+            exit 1
+          fi

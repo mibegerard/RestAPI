@@ -12,7 +12,7 @@ router.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -27,8 +27,8 @@ router.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       players: '/api/players',
-      health: '/api/health'
-    }
+      health: '/api/health',
+    },
   });
 });
 
