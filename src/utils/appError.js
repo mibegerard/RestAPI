@@ -30,10 +30,10 @@ function createError(message, status = 400) {
   return new AppError(message, status);
 }
 
-module.exports = { 
-  AppError, 
-  ValidationError, 
-  NotFoundError, 
-  ConflictError, 
-  createError 
+module.exports = {
+  AppError,
+  ValidationError,
+  NotFoundError,
+  ConflictError,
+  createError,
 };

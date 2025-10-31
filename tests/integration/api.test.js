@@ -7,21 +7,17 @@ const { samplePlayers, partialUpdateData } = require('../fixtures/players');
 describe('Players API Integration Tests', () => {
   describe('Health & Info Endpoints', () => {
     test('GET /api/health should return API health status', async () => {
-      const response = await request(app)
-        .get('/api/health')
-        .expect(200);
+      const response = await request(app).get('/api/health').expect(200);
 
       expect(response.body).toMatchObject({
         success: true,
-        message: 'API is running'
+        message: 'API is running',
       });
       expect(response.body.timestamp).toBeDefined();
     });
 
     test('GET /api should return API information', async () => {
-      const response = await request(app)
-        .get('/api')
-        .expect(200);
+      const response = await request(app).get('/api').expect(200);
 
       expect(response.body).toMatchObject({
         success: true,
@@ -29,17 +25,15 @@ describe('Players API Integration Tests', () => {
         version: '1.0.0',
         endpoints: {
           players: '/api/players',
-          health: '/api/health'
-        }
+          health: '/api/health',
+        },
       });
     });
   });
 
   describe('GET /api/players', () => {
     test('should return empty list when no players exist', async () => {
-      const response = await request(app)
-        .get('/api/players')
-        .expect(200);
+      const response = await request(app).get('/api/players').expect(200);
 
       expect(response.body).toMatchObject({
         success: true,
@@ -48,8 +42,8 @@ describe('Players API Integration Tests', () => {
           page: 1,
           limit: 10,
           totalPages: 0,
-          players: []
-        }
+          players: [],
+        },
       });
     });
 
@@ -59,9 +53,7 @@ describe('Players API Integration Tests', () => {
       await Player.insertMany(playersData);
 
       // Act
-      const response = await request(app)
-        .get('/api/players?page=1&limit=3')
-        .expect(200);
+      const response = await request(app).get('/api/players?page=1&limit=3').expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
@@ -74,18 +66,16 @@ describe('Players API Integration Tests', () => {
       // Arrange
       const playersData = createPlayersData(3).map((player, index) => ({
         ...player,
-        data: { ...player.data, rank: 3 - index } // ranks: 3, 2, 1
+        data: { ...player.data, rank: 3 - index }, // ranks: 3, 2, 1
       }));
       await Player.insertMany(playersData);
 
       // Act
-      const response = await request(app)
-        .get('/api/players?sort=data.rank')
-        .expect(200);
+      const response = await request(app).get('/api/players?sort=data.rank').expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
-      const ranks = response.body.data.players.map(p => p.data.rank);
+      const ranks = response.body.data.players.map((p) => p.data.rank);
       expect(ranks).toEqual([1, 2, 3]); // Should be sorted ascending
     });
   });
@@ -97,9 +87,7 @@ describe('Players API Integration Tests', () => {
       await Player.create(playerData);
 
       // Act
-      const response = await request(app)
-        .get('/api/players/1')
-        .expect(200);
+      const response = await request(app).get('/api/players/1').expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
@@ -109,18 +97,14 @@ describe('Players API Integration Tests', () => {
     });
 
     test('should return 404 for non-existent player', async () => {
-      const response = await request(app)
-        .get('/api/players/999')
-        .expect(404);
+      const response = await request(app).get('/api/players/999').expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('not found');
     });
 
     test('should return 400 for invalid ID format', async () => {
-      const response = await request(app)
-        .get('/api/players/invalid')
-        .expect(400);
+      const response = await request(app).get('/api/players/invalid').expect(400);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Invalid player ID');
@@ -133,15 +117,12 @@ describe('Players API Integration Tests', () => {
       const playerData = createPlayerData({ id: 1 });
 
       // Act
-      const response = await request(app)
-        .post('/api/players')
-        .send(playerData)
-        .expect(201);
+      const response = await request(app).post('/api/players').send(playerData).expect(201);
 
       // Assert
       expect(response.body.success).toBe(true);
       expect(response.body.data.id).toBe(1);
-      
+
       // Verify in database
       const inDb = await Player.findOne({ id: 1 });
       expect(inDb).toBeTruthy();
@@ -152,10 +133,7 @@ describe('Players API Integration Tests', () => {
       const invalidData = { name: 'Test Player' };
 
       // Act
-      const response = await request(app)
-        .post('/api/players')
-        .send(invalidData)
-        .expect(400);
+      const response = await request(app).post('/api/players').send(invalidData).expect(400);
 
       // Assert
       expect(response.body.status).toBe('error');
@@ -166,14 +144,11 @@ describe('Players API Integration Tests', () => {
       // Arrange
       const playerData1 = createPlayerData({ id: 1, shortname: 'TEST1' });
       const playerData2 = createPlayerData({ id: 1, shortname: 'TEST2' });
-      
+
       await Player.create(playerData1);
 
       // Act
-      const response = await request(app)
-        .post('/api/players')
-        .send(playerData2)
-        .expect(409);
+      const response = await request(app).post('/api/players').send(playerData2).expect(409);
 
       // Assert
       expect(response.body.success).toBe(false);
@@ -187,21 +162,18 @@ describe('Players API Integration Tests', () => {
       const originalData = createPlayerData({ id: 1 });
       await Player.create(originalData);
 
-      const updateData = createPlayerData({ 
-        id: 1, 
+      const updateData = createPlayerData({
+        id: 1,
         firstname: 'Updated',
         lastname: 'Name',
         country: {
           code: 'ESP',
-          picture: 'https://example.com/flag.jpg'
-        }
+          picture: 'https://example.com/flag.jpg',
+        },
       });
 
       // Act
-      const response = await request(app)
-        .put('/api/players/1')
-        .send(updateData)
-        .expect(200);
+      const response = await request(app).put('/api/players/1').send(updateData).expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
@@ -215,10 +187,7 @@ describe('Players API Integration Tests', () => {
       const updateData = createPlayerData({ id: 999 });
 
       // Act
-      const response = await request(app)
-        .put('/api/players/999')
-        .send(updateData)
-        .expect(404);
+      const response = await request(app).put('/api/players/999').send(updateData).expect(404);
 
       // Assert
       expect(response.body.success).toBe(false);
@@ -229,13 +198,13 @@ describe('Players API Integration Tests', () => {
   describe('PATCH /api/players/:id', () => {
     test('should update player partially', async () => {
       // Arrange
-      const originalData = createPlayerData({ 
-        id: 1, 
+      const originalData = createPlayerData({
+        id: 1,
         firstname: 'Original',
         data: {
           ...createPlayerData().data,
-          weight: 75000
-        }
+          weight: 75000,
+        },
       });
       await Player.create(originalData);
 
@@ -257,10 +226,7 @@ describe('Players API Integration Tests', () => {
       await Player.create(playerData);
 
       // Act
-      const response = await request(app)
-        .patch('/api/players/1')
-        .send({ id: 999 })
-        .expect(400);
+      const response = await request(app).patch('/api/players/1').send({ id: 999 }).expect(400);
 
       // Assert
       expect(response.body.success).toBe(false);
@@ -275,23 +241,19 @@ describe('Players API Integration Tests', () => {
       await Player.create(playerData);
 
       // Act
-      const response = await request(app)
-        .delete('/api/players/1')
-        .expect(200);
+      const response = await request(app).delete('/api/players/1').expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
       expect(response.body.data.message).toContain('deleted successfully');
-      
+
       // Verify deletion
       const deleted = await Player.findOne({ id: 1 });
       expect(deleted).toBeNull();
     });
 
     test('should return 404 for non-existent player', async () => {
-      const response = await request(app)
-        .delete('/api/players/999')
-        .expect(404);
+      const response = await request(app).delete('/api/players/999').expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('not found');
@@ -300,7 +262,7 @@ describe('Players API Integration Tests', () => {
 
   describe('Specialized Update Endpoints', () => {
     beforeEach(async () => {
-      const playerData = createPlayerData({ 
+      const playerData = createPlayerData({
         id: 1,
         data: {
           rank: 5,
@@ -308,8 +270,8 @@ describe('Players API Integration Tests', () => {
           weight: 75000,
           height: 180,
           age: 25,
-          last: [1, 0, 1, 0, 1]
-        }
+          last: [1, 0, 1, 0, 1],
+        },
       });
       await Player.create(playerData);
     });
@@ -340,7 +302,7 @@ describe('Players API Integration Tests', () => {
       test('should update player stats only', async () => {
         const statsUpdate = {
           points: 2000,
-          last: [1, 1, 1, 0, 0]
+          last: [1, 1, 1, 0, 0],
         };
 
         const response = await request(app)
@@ -377,7 +339,7 @@ describe('Players API Integration Tests', () => {
         picture: player.picture,
         country: {
           code: player.country,
-          picture: 'https://example.com/flag.jpg'
+          picture: 'https://example.com/flag.jpg',
         },
         data: {
           rank: index + 1,
@@ -385,18 +347,16 @@ describe('Players API Integration Tests', () => {
           weight: player.weight * 1000, // Convert to grams
           height: player.height,
           age: 2025 - player.birthYear,
-          last: [1, 1, 0, 1, 0] // Sample win/loss record
-        }
+          last: [1, 1, 0, 1, 0], // Sample win/loss record
+        },
       }));
-      
+
       await Player.insertMany(testPlayers);
     });
 
     describe('GET /api/players/analytics/countries', () => {
       test('should return country win ratio analysis', async () => {
-        const response = await request(app)
-          .get('/api/players/analytics/countries')
-          .expect(200);
+        const response = await request(app).get('/api/players/analytics/countries').expect(200);
 
         expect(response.body.success).toBe(true);
         expect(response.body.data).toHaveProperty('best');
@@ -408,18 +368,16 @@ describe('Players API Integration Tests', () => {
 
     describe('GET /api/players/analytics/bmi', () => {
       test('should return BMI analysis', async () => {
-        const response = await request(app)
-          .get('/api/players/analytics/bmi')
-          .expect(200);
+        const response = await request(app).get('/api/players/analytics/bmi').expect(200);
 
         expect(response.body.success).toBe(true);
         expect(response.body.data).toHaveProperty('average');
         expect(response.body.data).toHaveProperty('players');
         expect(Array.isArray(response.body.data.players)).toBe(true);
         expect(typeof response.body.data.average).toBe('number');
-        
+
         // Check BMI calculation for each player
-        response.body.data.players.forEach(player => {
+        response.body.data.players.forEach((player) => {
           expect(player).toHaveProperty('bmi');
           expect(typeof player.bmi).toBe('number');
           expect(player.bmi).toBeGreaterThan(0);
@@ -429,22 +387,20 @@ describe('Players API Integration Tests', () => {
 
     describe('GET /api/players/analytics/height', () => {
       test('should return height statistics', async () => {
-        const response = await request(app)
-          .get('/api/players/analytics/height')
-          .expect(200);
+        const response = await request(app).get('/api/players/analytics/height').expect(200);
 
         expect(response.body.success).toBe(true);
         expect(response.body.data).toHaveProperty('min');
         expect(response.body.data).toHaveProperty('max');
         expect(response.body.data).toHaveProperty('average');
         expect(response.body.data).toHaveProperty('median');
-        
+
         const { min, max, average, median } = response.body.data;
         expect(typeof min).toBe('number');
         expect(typeof max).toBe('number');
         expect(typeof average).toBe('number');
         expect(typeof median).toBe('number');
-        
+
         expect(min).toBeLessThanOrEqual(max);
         expect(average).toBeGreaterThan(0);
         expect(median).toBeGreaterThan(0);
@@ -459,13 +415,11 @@ describe('Players API Integration Tests', () => {
       const endpoints = [
         '/api/players/analytics/countries',
         '/api/players/analytics/bmi',
-        '/api/players/analytics/height'
+        '/api/players/analytics/height',
       ];
 
       for (const endpoint of endpoints) {
-        const response = await request(app)
-          .get(endpoint)
-          .expect(404);
+        const response = await request(app).get(endpoint).expect(404);
 
         expect(response.body.success).toBe(false);
         expect(response.body.message).toContain('No players found');
@@ -475,22 +429,19 @@ describe('Players API Integration Tests', () => {
 
   describe('Error Handling', () => {
     test('should handle error for non-existent routes', async () => {
-      const response = await request(app)
-        .get('/api/nonexistent');
+      const response = await request(app).get('/api/nonexistent');
 
       // Can be 400 or 404 depending on routing setup
       expect([400, 404]).toContain(response.status);
     });
 
     test('should return consistent error format', async () => {
-      const response = await request(app)
-        .get('/api/players/999')
-        .expect(404);
+      const response = await request(app).get('/api/players/999').expect(404);
 
       expect(response.body).toMatchObject({
         success: false,
         statusCode: 404,
-        message: expect.stringContaining('not found')
+        message: expect.stringContaining('not found'),
       });
     });
 

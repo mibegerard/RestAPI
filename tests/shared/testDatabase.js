@@ -10,10 +10,10 @@ class TestDatabase {
     // Créer une instance de MongoDB en mémoire
     this.mongod = await MongoMemoryServer.create();
     const uri = this.mongod.getUri();
-    
+
     // Se connecter avec mongoose (réutilise la logique existante)
     await mongoose.connect(uri);
-    
+
     return uri;
   }
 

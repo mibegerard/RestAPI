@@ -3,7 +3,7 @@ const playerController = require('../controllers/playerController');
 const {
   validateCreatePlayer,
   validateUpdatePlayer,
-  validatePartialUpdatePlayer
+  validatePartialUpdatePlayer,
 } = require('../middlewares/playerValidator');
 
 const router = express.Router();

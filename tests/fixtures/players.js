@@ -6,16 +6,16 @@ const samplePlayers = [
     weight: 85,
     height: 185,
     isLeftHanded: true,
-    picture: 'https://example.com/nadal.jpg'
+    picture: 'https://example.com/nadal.jpg',
   },
   {
     name: 'Roger Federer',
-    country: 'SUI',  
+    country: 'SUI',
     birthYear: 1981,
     weight: 85,
     height: 185,
     isLeftHanded: false,
-    picture: 'https://example.com/federer.jpg'
+    picture: 'https://example.com/federer.jpg',
   },
   {
     name: 'Novak Djokovic',
@@ -24,8 +24,8 @@ const samplePlayers = [
     weight: 80,
     height: 188,
     isLeftHanded: false,
-    picture: 'https://example.com/djokovic.jpg'
-  }
+    picture: 'https://example.com/djokovic.jpg',
+  },
 ];
 
 const invalidPlayers = [
@@ -34,14 +34,14 @@ const invalidPlayers = [
     country: 'France',
     birthYear: 1990,
     weight: 75,
-    height: 180
+    height: 180,
   },
   {
     name: 'Test Player',
     // Pays manquant
     birthYear: 1990,
     weight: 75,
-    height: 180
+    height: 180,
   },
   {
     name: 'Test Player',
@@ -49,17 +49,17 @@ const invalidPlayers = [
     // Année de naissance invalide
     birthYear: 2030,
     weight: 75,
-    height: 180
-  }
+    height: 180,
+  },
 ];
 
 const partialUpdateData = {
   firstname: 'Updated',
-  lastname: 'Partially'
+  lastname: 'Partially',
 };
 
 module.exports = {
   samplePlayers,
   invalidPlayers,
-  partialUpdateData
+  partialUpdateData,
 };

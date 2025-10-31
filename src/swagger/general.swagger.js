@@ -3,7 +3,7 @@
  * tags:
  *   - name: General
  *     description: Endpoints généraux de l'API
- * 
+ *
  * /:
  *   get:
  *     summary: Informations de l'API
@@ -35,7 +35,7 @@
  *                     health:
  *                       type: string
  *                       example: "/api/health"
- * 
+ *
  * /health:
  *   get:
  *     summary: Vérification de santé de l'API
@@ -62,5 +62,5 @@
  */
 
 // Ce fichier contient uniquement la documentation Swagger pour les endpoints généraux
-// Les routes sont définies dans /routes/index.js  
+// Les routes sont définies dans /routes/index.js
 module.exports = {};

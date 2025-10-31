@@ -12,11 +12,7 @@ class PlayerService {
   async getAllPlayers({ page = 1, limit = 10, sort = 'data.rank', filter = {} } = {}) {
     const skip = (page - 1) * limit;
 
-    const players = await Player.find(filter)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean();
+    const players = await Player.find(filter).sort(sort).skip(skip).limit(limit).lean();
 
     const total = await Player.countDocuments(filter);
 
@@ -78,7 +74,7 @@ class PlayerService {
     const updated = await Player.findOneAndUpdate(
       { id },
       { 'data.rank': newRank },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updated) throw new NotFoundError(`Player with id ${id} not found`);
@@ -108,56 +104,55 @@ class PlayerService {
     return updated.toObject();
   }
 
-/**
- * Partial update (PATCH) - Update any fields of a player without replacing the entire object.
- * Respects HTTP PATCH semantics: only modifies provided fields, leaves others unchanged.
- */
+  /**
+   * Partial update (PATCH) - Update any fields of a player without replacing the entire object.
+   * Respects HTTP PATCH semantics: only modifies provided fields, leaves others unchanged.
+   */
   async updatePlayerPartial(id, partialData) {
-  if ('id' in partialData) throw new ValidationError('Player ID cannot be modified');
+    if ('id' in partialData) throw new ValidationError('Player ID cannot be modified');
 
-  const allowedTop = ['firstname', 'lastname', 'shortname', 'sex', 'picture'];
-  const updateData = {};
+    const allowedTop = ['firstname', 'lastname', 'shortname', 'sex', 'picture'];
+    const updateData = {};
 
-  // --- Top-level fields ---
-  for (const field of allowedTop) {
-    if (field in partialData) updateData[field] = partialData[field];
-  }
-
-  // --- Nested objects ---
-  const nestedKeys = ['country', 'data'];
-  let currentPlayer;
-
-  for (const key of nestedKeys) {
-    if (key in partialData && typeof partialData[key] === 'object') {
-      currentPlayer = currentPlayer || await Player.findOne({ id }).lean();
-      if (!currentPlayer) throw new NotFoundError(`Player with id ${id} not found`);
-      updateData[key] = { ...currentPlayer[key], ...partialData[key] };
+    // --- Top-level fields ---
+    for (const field of allowedTop) {
+      if (field in partialData) updateData[field] = partialData[field];
     }
-  }
 
-  if (Object.keys(updateData).length === 0)
-    throw new ValidationError('No valid fields provided for update');
+    // --- Nested objects ---
+    const nestedKeys = ['country', 'data'];
+    let currentPlayer;
 
-  // --- shortname uniqueness ---
-  if ('shortname' in updateData) {
-    const existing = await Player.findOne({ 
-      shortname: updateData.shortname.toUpperCase(), 
-      id: { $ne: id } 
+    for (const key of nestedKeys) {
+      if (key in partialData && typeof partialData[key] === 'object') {
+        currentPlayer = currentPlayer || (await Player.findOne({ id }).lean());
+        if (!currentPlayer) throw new NotFoundError(`Player with id ${id} not found`);
+        updateData[key] = { ...currentPlayer[key], ...partialData[key] };
+      }
+    }
+
+    if (Object.keys(updateData).length === 0)
+      throw new ValidationError('No valid fields provided for update');
+
+    // --- shortname uniqueness ---
+    if ('shortname' in updateData) {
+      const existing = await Player.findOne({
+        shortname: updateData.shortname.toUpperCase(),
+        id: { $ne: id },
+      });
+      if (existing) throw new ConflictError('Another player with this shortname exists');
+      updateData.shortname = updateData.shortname.toUpperCase();
+    }
+
+    // --- Perform update ---
+    const updated = await Player.findOneAndUpdate({ id }, updateData, {
+      new: true,
+      runValidators: true,
     });
-    if (existing) throw new ConflictError('Another player with this shortname exists');
-    updateData.shortname = updateData.shortname.toUpperCase();
+
+    if (!updated) throw new NotFoundError(`Player with id ${id} not found`);
+    return updated.toObject();
   }
-
-  // --- Perform update ---
-  const updated = await Player.findOneAndUpdate({ id }, updateData, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!updated) throw new NotFoundError(`Player with id ${id} not found`);
-  return updated.toObject();
-}
-
 
   // --- DELETE OPERATIONS ---
 

@@ -27,11 +27,11 @@ app.use(corsMiddleware);
 const routesDirPath = path.join(__dirname, 'routes');
 
 fs.readdirSync(routesDirPath).forEach((file) => {
-    const filePath = path.join(routesDirPath, file);
-    
-    if (fs.statSync(filePath).isFile() && file.endsWith('.js')) {
-        app.use('/api', require(filePath));
-    }
+  const filePath = path.join(routesDirPath, file);
+
+  if (fs.statSync(filePath).isFile() && file.endsWith('.js')) {
+    app.use('/api', require(filePath));
+  }
 });
 
 // ------------------------------------ swagger documentation ----------------------------

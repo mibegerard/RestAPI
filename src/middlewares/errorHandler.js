@@ -10,7 +10,7 @@ function errorHandler(err, req, res, next) {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
 
-  // Handle unexpected non-AppError exceptions 
+  // Handle unexpected non-AppError exceptions
   if (!(err instanceof AppError)) {
     statusCode = 500;
     message = 'Something went wrong on the server.';

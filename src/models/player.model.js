@@ -18,7 +18,7 @@ const CountrySchema = new Schema(
       trim: true,
     },
   },
-  { _id: false } // no separate _id for embedded subdocument
+  { _id: false }, // no separate _id for embedded subdocument
 );
 
 // --- Data Subdocument ---
@@ -58,7 +58,7 @@ const DataSchema = new Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 // --- Main Player Schema ---
@@ -109,7 +109,7 @@ const PlayerSchema = new Schema(
   {
     timestamps: true, // automatically adds createdAt / updatedAt
     versionKey: false,
-  }
+  },
 );
 
 const Player = mongoose.model('Player', PlayerSchema, 'Players');

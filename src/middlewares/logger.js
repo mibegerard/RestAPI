@@ -5,7 +5,7 @@ const stream = {
   write: (message) => {
     // Remove trailing newline from Morgan's message
     logger.info(message.trim());
-  }
+  },
 };
 
 // Define custom token for response time with color coding
@@ -19,7 +19,7 @@ morgan.token('colored-status', (req, res) => {
 morgan.token('response-time-colored', (req, res) => {
   const responseTime = parseFloat(morgan['response-time'](req, res));
   if (responseTime > 1000) return `⏱️  ${responseTime}ms`; // Slow
-  if (responseTime > 500) return `⏱️  ${responseTime}ms`;  // Medium
+  if (responseTime > 500) return `⏱️  ${responseTime}ms`; // Medium
   return `⚡ ${responseTime}ms`; // Fast
 });
 
@@ -38,10 +38,10 @@ const requestLogger = morgan(morganFormat, { stream });
 // Skip logging for health check endpoints (optional)
 const skipHealthChecks = morgan(morganFormat, {
   stream,
-  skip: (req) => req.url === '/health' || req.url === '/api/health'
+  skip: (req) => req.url === '/health' || req.url === '/api/health',
 });
 
 module.exports = {
-  requestLogger,        
-  skipHealthChecks      
+  requestLogger,
+  skipHealthChecks,
 };

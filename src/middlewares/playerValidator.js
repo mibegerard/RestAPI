@@ -1,6 +1,5 @@
 const { ValidationError } = require('../utils/appError');
 
-
 function idValidator(id) {
   if (!Number.isInteger(id)) throw new ValidationError('Player ID must be an integer');
 }
@@ -10,8 +9,10 @@ function sexValidator(sex) {
 }
 
 function countryValidator(country) {
-  if (!country || typeof country !== 'object') throw new ValidationError('Country must be an object');
-  if (!country.picture || typeof country.picture !== 'string') throw new ValidationError('Country.picture must be a URL string');
+  if (!country || typeof country !== 'object')
+    throw new ValidationError('Country must be an object');
+  if (!country.picture || typeof country.picture !== 'string')
+    throw new ValidationError('Country.picture must be a URL string');
   if (!country.code || typeof country.code !== 'string' || country.code.length !== 3)
     throw new ValidationError('Country.code must be exactly 3 letters');
   country.code = country.code.toUpperCase(); // normalize
@@ -24,7 +25,9 @@ function playerDataValidator(data) {
   fields.forEach((field) => {
     const val = data[field];
     if (!Number.isInteger(val) || (field !== 'rank' && val < 0) || (field === 'rank' && val < 1)) {
-      throw new ValidationError(`Data.${field} must be an integer${field === 'rank' ? ' >= 1' : ' >= 0'}`);
+      throw new ValidationError(
+        `Data.${field} must be an integer${field === 'rank' ? ' >= 1' : ' >= 0'}`,
+      );
     }
   });
 
@@ -38,12 +41,14 @@ function playerDataValidator(data) {
 }
 
 function shortnameValidator(shortname) {
-  if (!shortname || typeof shortname !== 'string') throw new ValidationError('Shortname must be a non-empty string');
+  if (!shortname || typeof shortname !== 'string')
+    throw new ValidationError('Shortname must be a non-empty string');
   return shortname.toUpperCase();
 }
 
 function firstnameValidator(firstname) {
-  if (!firstname || typeof firstname !== 'string') throw new ValidationError('Firstname is required');
+  if (!firstname || typeof firstname !== 'string')
+    throw new ValidationError('Firstname is required');
 }
 
 function lastnameValidator(lastname) {
@@ -88,13 +93,16 @@ function validatePayload({ partial = false, multiple = false } = {}) {
 // Player Object Validator
 // --------------------------
 function validatePlayerObject(payload, { partial = false } = {}) {
-  if (!payload || typeof payload !== 'object') throw new ValidationError('Payload must be an object');
+  if (!payload || typeof payload !== 'object')
+    throw new ValidationError('Payload must be an object');
 
   if (!partial) {
     // required top-level fields
-    ['id', 'firstname', 'lastname', 'shortname', 'sex', 'country', 'picture', 'data'].forEach((f) => {
-      if (!(f in payload)) throw new ValidationError(`Missing required field: ${f}`);
-    });
+    ['id', 'firstname', 'lastname', 'shortname', 'sex', 'country', 'picture', 'data'].forEach(
+      (f) => {
+        if (!(f in payload)) throw new ValidationError(`Missing required field: ${f}`);
+      },
+    );
   }
 
   if ('id' in payload) idValidator(payload.id);

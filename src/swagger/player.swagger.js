@@ -5,7 +5,7 @@
  *     description: Gestion des joueurs de tennis
  *   - name: Analytics
  *     description: Statistiques et analyses des joueurs
- * 
+ *
  * /players:
  *   get:
  *     summary: Liste tous les joueurs
@@ -65,7 +65,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ServerError'
- * 
+ *
  *   post:
  *     summary: Créer un nouveau joueur
  *     description: Ajoute un nouveau joueur à la base de données
@@ -95,7 +95,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ConflictError'
- * 
+ *
  * /players/{id}:
  *   get:
  *     summary: Récupérer un joueur par ID
@@ -126,7 +126,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
- * 
+ *
  *   put:
  *     summary: Mise à jour complète d'un joueur
  *     description: Met à jour toutes les données d'un joueur
@@ -163,7 +163,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
- * 
+ *
  *   patch:
  *     summary: Mise à jour partielle d'un joueur
  *     description: Met à jour seulement les champs fournis
@@ -200,7 +200,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
- * 
+ *
  *   delete:
  *     summary: Supprimer un joueur
  *     description: Supprime définitivement un joueur de la base de données
@@ -225,7 +225,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
- * 
+ *
  * /players/{id}/rank:
  *   patch:
  *     summary: Mettre à jour le rang d'un joueur
@@ -272,7 +272,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
- * 
+ *
  * /players/{id}/stats:
  *   patch:
  *     summary: Mettre à jour les statistiques d'un joueur
@@ -323,7 +323,7 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/NotFoundError'
- * 
+ *
  * /players/analytics/countries:
  *   get:
  *     summary: Statistiques par pays
@@ -351,7 +351,7 @@
  *                       type: array
  *                       items:
  *                         $ref: '#/components/schemas/CountryStats'
- * 
+ *
  * /players/analytics/bmi:
  *   get:
  *     summary: Analyse BMI des joueurs
@@ -372,7 +372,7 @@
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/BMIAnalysis'
- * 
+ *
  * /players/analytics/height:
  *   get:
  *     summary: Statistiques de taille
