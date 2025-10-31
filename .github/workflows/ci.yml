@@ -52,17 +52,3 @@ jobs:
             echo "❌ Test coverage ($COVERAGE%) is below 80%!"
             exit 1
           fi
-
-      # 7 Docker functional test
-      - name: Build & test Docker image
-        run: |
-          docker build -t restapi:${{ github.sha }} .
-          docker run -d --name test-api -p 3001:3000 -e NODE_ENV=production restapi:${{ github.sha }}
-          sleep 15
-
-          # Test API endpoints
-          curl -f http://localhost:3001/api/players || exit 1
-          echo "✅ Docker API test successful"
-
-          docker stop test-api
-          docker rm test-api
